@@ -14,7 +14,7 @@ char* longHex(unsigned long *decimal);
 int main() {
     
     int a;
-    my_printf("Hello %s %s!\n", "Mr", "Gaetan");
+    my_printf("Hello %s %s!\n", "world", "!");
     //printf("%c!\n", 'H');
 
     return 0;
