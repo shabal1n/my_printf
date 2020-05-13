@@ -7,7 +7,7 @@
 #include "func.c"
 
 int my_printf(char * restrict format, ...);
-char* myItoa(int num, char* str, int base);
+char* myItoa(long int num, char* str, int base);
 char* myHex(int number, int counter);
 char * myUtoa(unsigned int n);
 char* longHex(unsigned long *decimal, int size);
@@ -16,8 +16,8 @@ int numSize(long int num);
 int main() {
     
     int a;
-    my_printf("Hello %x %s!\n", 12345, "Gaetan");
-    //printf("%c!\n", 'H');
+    my_printf("Hello %u!\n", 2134);
+    //printf("Actual result: %o!\n", -2134);
 
     return 0;
 }
@@ -62,27 +62,30 @@ int my_printf(char * restrict format, ...) {
                 tmp = string;
                 length+=strlen(tmp);
             }
-        } else if (*ptr == 'd') {       //%d        
+
+        } else if (*ptr == 'd') {       //%d
 
             int i = va_arg(objectsList, int);
-            tmp = malloc(numSize(i));
-            myItoa(i, tmp, 10);
+
+            char* a = malloc(numSize(i) + 2);
+            tmp = myItoa(i, a, 10);
         
             length+=strlen(tmp);
         
         } else if (*ptr == 'o') {       //%o        
 
             int i = va_arg(objectsList, int);
-            tmp = malloc(numSize(i));
+            tmp = malloc(numSize(i) * 2);
             myItoa(i, tmp, 8);
 
             length+=strlen(tmp);
 
-        } else if (*ptr == 'u') {       //%u        
+        } else if (*ptr == 'u') {       //%u   stoped here       
 
             int i = va_arg(objectsList, int);
             unsigned int b = i;
-            tmp = malloc(numSize(i));
+            int mem = numSize(b);
+            tmp = malloc(mem);
             tmp = myUtoa(b);
 
             length+=strlen(tmp);

@@ -5,23 +5,24 @@
 #include <stdio.h>
 #include <stdbool.h>
 
+int numSize(long int num);
 
-char* myItoa(int num, char* str, int base) { 
+char* myItoa(long int num, char* str, int base) { 
 
     int i = 0; 
     bool isNegative = false; 
   
     //number is 0
     if (num == 0) { 
-        str[i++] = '0'; 
-        str[i] = '\0'; 
-        return str; 
-    } 
-  
-    //standart itoa()
-    if (num < 0 && base == 10) { 
+
+        str[i] = '0';  
+        str[i + 1] = '\0'; 
+        return str;
+    } else if (num < 0 && base == 10) {         //standart itoa()
+
         isNegative = true; 
         num = -num; 
+
     } 
   
     while (num != 0) { 
@@ -40,22 +41,17 @@ char* myItoa(int num, char* str, int base) {
         str[i++] = '-'; 
     }
     str[i] = '\0';
-  
     //reverse the string  
 
-    int f = 0;
-    int j = strlen(str) - 1;
-    char temp;
-
-    while(f < j) {
-        
-        temp = str[f];
-        str[f] = str[j];
-        str[j] = temp;
-        f++;
-        j--;
+    int k, j;
+    char c;
+ 
+    for (k = 0, j = strlen(str)-1; k<j; k++, j--) {
+        c = str[k];
+        str[k] = str[j];
+        str[j] = c;
     }
-  
+
     return str; 
 } 
 
@@ -111,22 +107,32 @@ char* myHex(int number, int size){
 
 
 char* myUtoa(unsigned int n) {
-  char *res, buffer[30];
-  unsigned int i, counter = 0;
+    char *res, buffer[numSize(n) + 1];
+    unsigned int i, counter = 0;
 
-  if (n == 0)
-    buffer[counter++] = '0';
+    if (n == 0) {
 
-  for ( ; n; n /= 10)
-    buffer[counter++] = "0123456789"[n%10];
+        buffer[counter++] = '0';
+    }
 
-  res = malloc(counter);
+    for ( ; n; n /= 10) { 
 
-  for (i = 0; i < counter; ++i)
-    res[i] = buffer[counter - i - 1];
+        buffer[counter++] = "0123456789"[n%10];
+    }
 
-  return res;
-  free(res);
+    res = malloc(counter + 1);
+
+    for (i = 0; i < counter; ++i) {
+
+        res[i] = buffer[counter - i - 1];
+        
+    } 
+
+    res[counter] = '\0';
+    
+    return res;
+
+    free(res);
 }
 
 
@@ -171,7 +177,17 @@ char* longHex(unsigned long *decimal, int size) {
 }
 
 int numSize(long int num) {
+
     int counter = 0;
+    if (num < 0) {
+
+        num = -num;
+
+    } else if(num == 0){
+
+        counter = 1;
+    }
+
     while (num != 0) {
                 
         num/=10;
