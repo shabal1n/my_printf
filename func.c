@@ -4,8 +4,11 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include <string.h>
 
 int numSize(long int num);
+char* myItoa(long int num, char* str, int base);
+char* myHex(int number, int size);
 
 char* myItoa(long int num, char* str, int base) { 
 
@@ -58,14 +61,8 @@ char* myItoa(long int num, char* str, int base) {
 
 char* myHex(int number, int size){
 
-    char *hexNumber = malloc(size);
+    char hexNumber[size + 1];
     int i = 0;
-    bool isNegative = false;
-
-    if(number < 0){
-        isNegative = true;
-        number = number * (-1);
-    }
 
     while (number != 0) { //hex conversion
         
@@ -83,9 +80,6 @@ char* myHex(int number, int size){
         number = number / 16;
     }
 
-    if(isNegative == true){
-        hexNumber[i++] = '-';
-    }
     hexNumber[i] = '\0';
 
     int f = 0;
@@ -101,13 +95,14 @@ char* myHex(int number, int size){
         j--;
     }
 
-    return hexNumber;
-    free(hexNumber);
+    char* ptr = hexNumber;
+    return ptr;
+    free(ptr);
 }
 
 
-char* myUtoa(unsigned int n) {
-    char *res, buffer[numSize(n) + 1];
+char* myUtoa(unsigned int n, int size) {
+    char buffer[numSize(n) + 1];
     unsigned int i, counter = 0;
 
     if (n == 0) {
@@ -120,26 +115,29 @@ char* myUtoa(unsigned int n) {
         buffer[counter++] = "0123456789"[n%10];
     }
 
-    res = malloc(counter + 1);
+    char res[size + 1];
 
-    for (i = 0; i < counter; ++i) {
+    for (i = 0; i < size; ++i) {
 
         res[i] = buffer[counter - i - 1];
         
     } 
 
-    res[counter] = '\0';
-    
-    return res;
+    //free(buffer); 
+    res[size] = '\0';
 
-    free(res);
+    char* ptr = res;
+
+    return ptr;
+    free(ptr);
+    
 }
 
 
 char* longHex(unsigned long *decimal, int size) {
     long q, r;
     int i, j = 0;
-    char *hexadecimal = malloc(size);
+    char hexadecimal[size];
     
     q = *decimal;
     
@@ -172,8 +170,10 @@ char* longHex(unsigned long *decimal, int size) {
         }
     }
     
-    return hexadecimal;
-    free(hexadecimal);
+    char* final = hexadecimal;
+
+    return final;
+    free(final);
 }
 
 int numSize(long int num) {
@@ -185,7 +185,7 @@ int numSize(long int num) {
 
     } else if(num == 0){
 
-        counter = 1;
+        counter += 1;
     }
 
     while (num != 0) {
@@ -195,4 +195,45 @@ int numSize(long int num) {
     }
 
     return counter;
+}
+
+char* myNegativeHex(unsigned int number, int size){
+
+    char hexNumber[size + 1];
+    int i = 0;
+
+    while (number != 0) { //hex conversion
+        
+        int tmp = 0;
+        tmp = number % 16;
+
+        if (tmp < 10) {
+            hexNumber[i] = tmp + 48;
+            i++;
+        } else {
+            hexNumber[i] = tmp + 55;
+            i++;
+        }
+
+        number = number / 16;
+    }
+
+    hexNumber[i] = '\0';
+
+    int f = 0;
+    int j = strlen(hexNumber) - 1;
+    char temp;
+
+    while(f < j) { //reverse string
+        
+        temp = hexNumber[f];
+        hexNumber[f] = hexNumber[j];
+        hexNumber[j] = temp;
+        f++;
+        j--;
+    }
+
+    char* ptr = hexNumber;
+    return ptr;
+    free(ptr);
 }

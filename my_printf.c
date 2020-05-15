@@ -9,15 +9,15 @@
 int my_printf(char * restrict format, ...);
 char* myItoa(long int num, char* str, int base);
 char* myHex(int number, int counter);
-char * myUtoa(unsigned int n);
+char * myUtoa(unsigned int n, int size);
 char* longHex(unsigned long *decimal, int size);
 int numSize(long int num);
+char* myNegativeHex(unsigned int number, int size);
 
 int main() {
     
     int a;
-    my_printf("Hello %u!\n", 2134);
-    //printf("Actual result: %o!\n", -2134);
+    my_printf("Hello %c!\n", "?");
 
     return 0;
 }
@@ -80,30 +80,36 @@ int my_printf(char * restrict format, ...) {
 
             length+=strlen(tmp);
 
-        } else if (*ptr == 'u') {       //%u   stoped here       
+        } else if (*ptr == 'u') {       //%u        
 
             int i = va_arg(objectsList, int);
             unsigned int b = i;
             int mem = numSize(b);
-            tmp = malloc(mem);
-            tmp = myUtoa(b);
+            
+            tmp = myUtoa(b, numSize(b));
 
             length+=strlen(tmp);
             
-        } else if (*ptr == 'x') {       //%x        
+        } else if (*ptr == 'x') {       //%x  
             
             int i = va_arg(objectsList, int);
-            int num = i;
-        
-            tmp = myHex(i, numSize(i));
+            if (i > 0) {
+
+                tmp = myHex(i, numSize(i));
+
+            } else {
+                unsigned int num = i;
+                
+                tmp = myNegativeHex(num, numSize(num));
+            }
 
             length+=strlen(tmp);
             
         } else if (*ptr == 'c') {       //%c         
 
-            int i = va_arg(objectsList, int);
-            tmp = malloc(numSize(i));
-            tmp = (char*)&i;
+            char* i = va_arg(objectsList, char*);
+    
+            tmp = i;
             length++;
 
         } else if (*ptr == 'p') {       //%p     
@@ -114,7 +120,7 @@ int my_printf(char * restrict format, ...) {
             unsigned long int address;
             address = (unsigned long int)&str;
             
-            tmp = (char*)longHex(&address, numSize(address));
+            tmp = longHex(&address, numSize(address));
 
             length+=strlen(tmp) + 2;
         }
