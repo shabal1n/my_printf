@@ -60,12 +60,14 @@ int my_printf(char *restrict format, ...)
         else if (*ptr == 'd')//%d
         {
             int i = va_arg(objectsList, int);
+            tmp = malloc(numSize(i) + 1);
             myItoa(i, tmp, 10);
             length += strlen(tmp);
         }
         else if (*ptr == 'o')//%o
         {
             int i = va_arg(objectsList, int);
+            tmp = malloc(numSize(i) + 1);
             myItoa(i, tmp, 8);
             length += strlen(tmp);
         }
@@ -104,14 +106,14 @@ int my_printf(char *restrict format, ...)
             str = va_arg(objectsList, void *);
             unsigned long int address;
             address = (unsigned long int)&str;
-            tmp = (char *)longHex(&address, numSize(address) + 1);
+            tmp = longHex(&address, numSize(address));
             length += strlen(tmp) + 2;
         }
 
         if (*ptr == 'p')
         {
-            write(1, "0x", 3);
-            write(1, tmp, strlen(tmp) + 1);
+            write(1, "0x", 2);
+            write(1, tmp, strlen(tmp));
         }
         else if (*ptr == 'c')
         {

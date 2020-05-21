@@ -40,7 +40,7 @@ char* longHex(unsigned long* decimal, int size)
 {
     long q, r;
     int i, j = 0;
-    char hexadecimal[size];
+    char hexadecimal[size + 1];
     q = *decimal;
 
     while (q != 0)
@@ -78,7 +78,7 @@ char* longHex(unsigned long* decimal, int size)
             hexadecimal[i] = hexadecimal[i] + 32;
         }
     }
-
+    hexadecimal[size + 1] = '\0';
     char* final = hexadecimal;
     return final;
     free(final);
