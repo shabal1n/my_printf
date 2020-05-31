@@ -6,15 +6,18 @@
 int numSize(long int num);
 char* reverse(char hexNumber[]);
 
-char* myItoa(long int num, char* str, int base)
+char* myItoa(long int num, int base)
 {
+    char str[numSize(num) + 2];
     int i = 0;
     bool isNegative = false;
     if (num == 0)
     {
         str[i] = '0';
         str[i + 1] = '\0';
-        return str;
+        char *final = str;
+        return final;
+        free(final);
     }
     else if (num < 0 && base == 10)
     {
@@ -43,8 +46,10 @@ char* myItoa(long int num, char* str, int base)
     str[i] = '\0';
 
     reverse(str);
+    char *final = str;
 
-    return str;
+    return final;
+    free(final);
 }
 
 char* myUtoa(unsigned int n, int size)

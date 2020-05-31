@@ -36,7 +36,7 @@ char* myHex(int number, int size)
     free(ptr);
 }
 
-char* longHex(unsigned long* decimal, int size)
+char* longHex(long* decimal, int size)
 {
     long q, r;
     int i, j = 0;
@@ -78,7 +78,7 @@ char* longHex(unsigned long* decimal, int size)
             hexadecimal[i] = hexadecimal[i] + 32;
         }
     }
-    hexadecimal[size + 1] = '\0';
+    hexadecimal[size ] = '\0';
     char* final = hexadecimal;
     return final;
     free(final);

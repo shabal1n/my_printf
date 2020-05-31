@@ -1,5 +1,7 @@
 #include <stdarg.h>
+#include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #include "functions.h"
 
@@ -7,8 +9,9 @@ int my_printf(char *restrict format, ...);
 
 int main()
 {
-    int a;
-    my_printf("%p!\n", a);
+    int* a;
+    my_printf("My printf: %p\n", &a);
+    printf("C print: %p", &a);
     return 0;
 }
 
@@ -60,22 +63,19 @@ int my_printf(char *restrict format, ...)
         else if (*ptr == 'd')//%d
         {
             int i = va_arg(objectsList, int);
-            tmp = malloc(numSize(i) + 1);
-            myItoa(i, tmp, 10);
+            tmp = myItoa(i, 10);
             length += strlen(tmp);
         }
         else if (*ptr == 'o')//%o
         {
             int i = va_arg(objectsList, int);
-            tmp = malloc(numSize(i) + 1);
-            myItoa(i, tmp, 8);
+            tmp = myItoa(i, 8);
             length += strlen(tmp);
         }
         else if (*ptr == 'u')//%u
         {
             int i = va_arg(objectsList, int);
             unsigned int b = i;
-            int mem = numSize(b);
             tmp = myUtoa(b, numSize(b));
             length += strlen(tmp);
         }
@@ -102,11 +102,9 @@ int my_printf(char *restrict format, ...)
         }
         else if (*ptr == 'p')//%p
         {
-            void *str;
-            str = va_arg(objectsList, void *);
-            unsigned long int address;
-            address = (unsigned long int)&str;
-            tmp = longHex(&address, numSize(address));
+            void *str = va_arg(objectsList, void *);
+            long *address = (long *)&str;
+            tmp = longHex(address, numSize(*address));
             length += strlen(tmp) + 2;
         }
 
@@ -124,7 +122,6 @@ int my_printf(char *restrict format, ...)
             write(1, tmp, strlen(tmp));
         }
     }
-    //printf("%d", length);               //prints size of printf()
     va_end(objectsList);
     return length;
 }
